@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">VSU Schedule</string>
+    <string name="navigation_drawer_open">Открыть навигационное меню</string>
+    <string name="navigation_drawer_close">Закрыть навигационное меню</string>
+    <string name="action_settings">Настройки</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+    <string name="group">группа</string>
+    <string name="rschedule">Звонки</string>
+    <string name="pref_group_number">Выбрать группу</string>
+    <string name="pref_header_general">Основные</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="pref_group_l1">8 группа</string>
+    <string name="pref_group_l2">9 группа</string>
+</resources>
