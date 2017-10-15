@@ -35,7 +35,7 @@ object Schedules {
             Para(4, "Дискр. математика", "505П", "Каверина"),
             Para(5, "Матанализ", "505П", "", ParaState.Numerator)))
     private val SATURDAY8 = ArrayList(Arrays.asList(
-            Para(0, "Матанализ", "292", "Семенов", ParaState.Numerator)))
+            Para(2, "Матанализ", "292", "Семенов", ParaState.Numerator)))
 
 
     private val MONDAY9 = ArrayList(Arrays.asList(
@@ -61,7 +61,7 @@ object Schedules {
             Para(2, "Тех. прогр.", "293 Л6", "Хлебов", ParaState.Denominator),
             Para(3, "Дискр. математика", "297", "Каверина")))
     private val SATURDAY9 = ArrayList(Arrays.asList(
-            Para(0, "Матанализ", "292", "Семенов", ParaState.Numerator)))
+            Para(2, "Матанализ", "292", "Семенов", ParaState.Numerator)))
 
     private val RINGS = ArrayList(Arrays.asList(
             Para(0, "I", "", ""),

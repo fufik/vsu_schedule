@@ -2,7 +2,6 @@ package com.fufik.vsuschedule
 
 import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.NavigationView
@@ -32,7 +31,7 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
         if (savedInstanceState == null) {
             val intent = intent
             day = intent.getIntExtra("DayOfWeek", Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
-            PreferenceManager.setDefaultValues(this, R.xml.pref_general, false)
+            PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             val pManager = PreferenceManager.getDefaultSharedPreferences(this)
             group = intent.getIntExtra("Group", Integer.parseInt(pManager.getString("group_list", null)))
             week = intent.getBooleanExtra("Week", Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) % 2 == 0) //t -- num, f -- den

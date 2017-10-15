@@ -13,7 +13,7 @@
     <string name="group">группа</string>
     <string name="rschedule">Звонки</string>
     <string name="pref_group_number">Выбрать группу</string>
-    <string name="pref_header_general">Основные</string>
+    <!--string name="pref_header_general">Основные</string-->
     <string name="title_activity_settings">Настройки</string>
     <string name="pref_group_l1">8 группа</string>
     <string name="pref_group_l2">9 группа</string>
