@@ -104,15 +104,22 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
             val settingsIntent = Intent(baseContext, SettingsActivity::class.java)
             settingsIntent.putExtra("Group", group)
             startActivityForResult(settingsIntent, Activity.RESULT_OK)
-            val pManager = PreferenceManager.getDefaultSharedPreferences(this)
-            group = Integer.parseInt(pManager.getString("group_list", null))
-            prepareSchedule(day)
             return true
         }
-
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val pManager = PreferenceManager.getDefaultSharedPreferences(this)
+        group = Integer.parseInt(pManager.getString("group_list", null))
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        prepareSchedule(day)
+
+    }
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         val id = item.itemId
