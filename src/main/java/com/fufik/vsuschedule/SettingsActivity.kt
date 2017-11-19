@@ -25,16 +25,13 @@ class SettingsActivity : AppCompatPreferenceActivity() {
     }
 
     override fun onMenuItemSelected(featureId: Int, item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == android.R.id.home) {
-            if (!super.onMenuItemSelected(featureId, item)) {
-                NavUtils.navigateUpFromSameTask(this)
-            }
-            return true
-        }
+    val id = item.itemId
+    if (id == android.R.id.home) {
+        this.onBackPressed()
+        return true
+    }
         return super.onMenuItemSelected(featureId, item)
     }
-
     override fun onBackPressed() {
         setResult(RESULT_OK)
         super.onBackPressed()
