@@ -38,8 +38,4 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         return
     }
 
-    private fun isXLargeTablet(context: Context): Boolean {
-        return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_XLARGE
-    }
-
 }

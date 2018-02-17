@@ -3,7 +3,7 @@ package com.fufik.vsuschedule
 import java.util.*
 
 object Schedules {
-    var groups: MutableMap<Int, Map<String, ArrayList<Para>>> = HashMap()
+    var groups: MutableMap<String, Map<String, ArrayList<Para>>> = HashMap()
     private val week8 = object : HashMap<String, ArrayList<Para>>() {
 
     }
@@ -87,25 +87,19 @@ object Schedules {
         week9.put("Friday", Schedules.FRIDAY9)
         week9.put("Saturday", Schedules.SATURDAY9)
         week9.put("Rings", Schedules.RINGS)
-        groups.put(8, week8)
-        groups.put(9, week9)
+        groups.put("8", week8)
+        groups.put("9", week9)
     }
 
     fun getKey(day: Int): String {
-        return if (day == Calendar.MONDAY) {
-            "Monday"
-        } else if (day == Calendar.TUESDAY) {
-            "Tuesday"
-        } else if (day == Calendar.WEDNESDAY) {
-            "Wednesday"
-        } else if (day == Calendar.THURSDAY) {
-            "Thursday"
-        } else if (day == Calendar.FRIDAY) {
-            "Friday"
-        } else if (day == Calendar.SATURDAY) {
-            "Saturday"
-        } else {
-            "Rings"
+        return when (day) {
+            Calendar.MONDAY -> "Monday"
+            Calendar.TUESDAY -> "Tuesday"
+            Calendar.WEDNESDAY -> "Wednesday"
+            Calendar.THURSDAY -> "Thursday"
+            Calendar.FRIDAY -> "Friday"
+            Calendar.SATURDAY -> "Saturday"
+            else -> "Rings"
         }
 
     }

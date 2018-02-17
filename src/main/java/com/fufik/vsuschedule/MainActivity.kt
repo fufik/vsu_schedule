@@ -1,6 +1,6 @@
 package com.fufik.vsuschedule
-
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -18,10 +18,19 @@ import android.view.View
 import android.widget.TextView
 import java.util.*
 import kotlin.collections.ArrayList
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.Color
+import android.util.Log
+import android.view.Gravity
+import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
+
 
 class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener,DrawerLayout.DrawerListener {
+
     private var day: Int = 0
-    private var group: Int = 0
+    private var group: String = ""
     private var week: Boolean = false
     private val paras: ArrayList<Para> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +42,11 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
             day = intent.getIntExtra("DayOfWeek", Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
             val pManager = PreferenceManager.getDefaultSharedPreferences(this)
-            group = intent.getIntExtra("Group", Integer.parseInt(pManager.getString("group_list", null)))
+            group = pManager.getString("group_list", null)
             week = intent.getBooleanExtra("Week", Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) % 2 == 0) //t -- num, f -- den
         } else {
             day = savedInstanceState.getInt("DayOfWeek")
-            group = savedInstanceState.getInt("Group")
+            group = savedInstanceState.getString("Group")
             week = savedInstanceState.getBoolean("Week")
         }
 
@@ -46,10 +55,15 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
         val rv = findViewById(R.id.rv) as RecyclerView
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+
         rv.setLayoutManager(llm)
         rv.setHasFixedSize(true)
         setSupportActionBar(toolbar)
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        val fab = findViewById(R.id.fab) as FloatingActionButton
+        fab.setOnClickListener { view ->
+            startActivity(Intent(baseContext,SettingsActivity::class.java))
+        }
         drawer.addDrawerListener(toggle)
         drawer.addDrawerListener(this)
         toggle.syncState()
@@ -58,20 +72,15 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
         val header = navigationView.getHeaderView(0)
         val tvGroup = header.findViewById<TextView>(R.id.group)
         tvGroup.text = group.toString() + " " + getString(R.string.group)
-        if (day == Calendar.MONDAY) {
-            navigationView.menu.getItem(0).isChecked = true
-        } else if (day == Calendar.TUESDAY) {
-            navigationView.menu.getItem(1).isChecked = true
-        } else if (day == Calendar.WEDNESDAY) {
-            navigationView.menu.getItem(2).isChecked = true
-        } else if (day == Calendar.THURSDAY) {
-            navigationView.menu.getItem(3).isChecked = true
-        } else if (day == Calendar.FRIDAY) {
-            navigationView.menu.getItem(4).isChecked = true
-        } else if (day == Calendar.SATURDAY) {
-            navigationView.menu.getItem(5).isChecked = true
-        } else if (day == Calendar.SUNDAY) {
-            navigationView.menu.getItem(6).isChecked = true
+
+        when (day) {
+            Calendar.MONDAY -> navigationView.menu.getItem(0).isChecked = true
+            Calendar.TUESDAY -> navigationView.menu.getItem(1).isChecked = true
+            Calendar.WEDNESDAY -> navigationView.menu.getItem(2).isChecked = true
+            Calendar.THURSDAY -> navigationView.menu.getItem(3).isChecked = true
+            Calendar.FRIDAY -> navigationView.menu.getItem(4).isChecked = true
+            Calendar.SATURDAY -> navigationView.menu.getItem(5).isChecked = true
+            Calendar.SUNDAY -> navigationView.menu.getItem(6).isChecked = true
         }
 
         prepareSchedule(day)
@@ -111,7 +120,7 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val pManager = PreferenceManager.getDefaultSharedPreferences(this)
-        group = Integer.parseInt(pManager.getString("group_list", null))
+        group = pManager.getString("group_list", null)
 
     }
 
@@ -124,20 +133,14 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
         // Handle navigation view item clicks here.
         val id = item.itemId
 
-        if (id == R.id.nav_monday) {
-            day = Calendar.MONDAY
-        } else if (id == R.id.nav_tuesday) {
-            day = Calendar.TUESDAY
-        } else if (id == R.id.nav_wednesday) {
-            day = Calendar.WEDNESDAY
-        } else if (id == R.id.nav_thursday) {
-            day = Calendar.THURSDAY
-        } else if (id == R.id.nav_friday) {
-            day = Calendar.FRIDAY
-        } else if (id == R.id.nav_saturday) {
-            day = Calendar.SATURDAY
-        } else if (id == R.id.nav_rschedule) {
-            day = Calendar.SUNDAY
+        when (id) {
+            R.id.nav_monday -> day = Calendar.MONDAY
+            R.id.nav_tuesday -> day = Calendar.TUESDAY
+            R.id.nav_wednesday -> day = Calendar.WEDNESDAY
+            R.id.nav_thursday -> day = Calendar.THURSDAY
+            R.id.nav_friday -> day = Calendar.FRIDAY
+            R.id.nav_saturday -> day = Calendar.SATURDAY
+            R.id.nav_rschedule -> day = Calendar.SUNDAY
         }
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
@@ -161,7 +164,7 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
 
     public override fun onSaveInstanceState(savedInstanceState: Bundle) {
         savedInstanceState.putInt("DayOfWeek", day)
-        savedInstanceState.putInt("Group", group)
+        savedInstanceState.putString("Group", group)
         savedInstanceState.putBoolean("Week", week)
         super.onSaveInstanceState(savedInstanceState)
     }
@@ -199,7 +202,7 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
 
     private fun prepareSchedule(day: Int) {
         val pManager = PreferenceManager.getDefaultSharedPreferences(this)
-        group = Integer.parseInt(pManager.getString("group_list", null))
+        group = pManager.getString("group_list", null)
         initializeData(day)
         initializeAdapter()
     }
@@ -208,6 +211,8 @@ class MainActivity: AppCompatActivity(),NavigationView.OnNavigationItemSelectedL
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         val header = navigationView.getHeaderView(0)
         val tvGroup = header.findViewById<TextView>(R.id.group)
-        tvGroup.text = group.toString() + " " + getString(R.string.group)
+        tvGroup.setText(group.toString() + " " + getString(R.string.group))
     }
+
+
 }
